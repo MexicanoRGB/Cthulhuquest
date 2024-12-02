@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Próximo Quebra-Cabeça</title>
+  <style>
+    body {
+        font-family: 'Courier New', Courier, monospace;
+        background-color: #0d0d0d;
+        color: #00ff00;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+      }
+  
+      h1 {
+        font-size: 2.5rem;
+        text-shadow: 0 0 10px #00ff00;
+        margin-bottom: 20px;
+      }
+  
+      p {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+      }
+  
+      #puzzle, #response {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin: 20px auto;
+        flex-wrap: wrap;
+      }
+  
+      .piece {
+        padding: 10px 15px;
+        font-size: 1.2rem;
+        color: #00ff00;
+        background: linear-gradient(145deg, #111111, #222222);
+        border: 1px solid #00ff00;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: grab;
+        text-shadow: 0 0 5px #00ff00;
+        user-select: none;
+      }
+  
+      .piece:active {
+        cursor: grabbing;
+      }
+  
+      #response {
+        min-height: 70px;
+        border: 2px dashed #00ff00;
+        padding: 10px;
+        box-shadow: 0 0 10px #00ff00;
+      }
+  
+      button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        background-color: #111;
+        color: #00ff00;
+        border: 2px solid #00ff00;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+      }
+  
+      button:hover {
+        background-color: #222;
+        box-shadow: 0 0 10px #00ff00;
+      }
+  </style>
+</head>
+<body>
+  <h1>‘bthnk ath azoth</h1>
+  <p>athg’eehf’-.</p>
+  <p>Me diga, quas são os seres mais poderosos?.</p>
+  <div id="puzzle"></div>
+  <div id="response"></div>
+  <button onclick="checkWin()">Verificar</button>
+  <button onclick="shuffle()">Embaralhar</button>
+
+  <script>
+    const puzzle = document.getElementById('puzzle');
+    const response = document.getElementById('response');
+    const correctOrder = ["Nyarlathotep", "Cthulhu", "Azathoth", "Shub-Niggurath", "Ithaqua", "Yog-Sothoth"];
+    const extraWords = ["R’lyeh", "Kadath", "Y’ha-nthlei", "Dagon", "Tsathoggua", "Nodens"];
+    let terms = [...correctOrder, ...extraWords];
+
+    const createPuzzle = () => {
+      puzzle.innerHTML = '';
+      response.innerHTML = '';
+      terms.forEach((term) => {
+        const piece = document.createElement('div');
+        piece.classList.add('piece');
+        piece.textContent = term;
+        piece.draggable = true;
+
+        piece.addEventListener('dragstart', dragStart);
+        piece.addEventListener('dragover', dragOver);
+        piece.addEventListener('drop', dropPiece);
+
+        puzzle.appendChild(piece);
+      });
+
+      response.addEventListener('dragover', dragOver);
+      response.addEventListener('drop', dropPiece);
+    };
+
+    const shuffle = () => {
+      terms.sort(() => Math.random() - 0.5);
+      createPuzzle();
+    };
+
+    let draggedPiece = null;
+
+    const dragStart = (e) => {
+      draggedPiece = e.target;
+    };
+
+    const dragOver = (e) => {
+      e.preventDefault();
+    };
+
+    const dropPiece = (e) => {
+      e.preventDefault();
+      if (e.target === response || e.target.classList.contains('piece')) {
+        e.target.appendChild(draggedPiece);
+      }
+    };
+
+    const checkWin = () => {
+      const currentOrder = Array.from(response.children).map(
+        (piece) => piece.textContent
+      );
+
+      if (JSON.stringify(currentOrder) === JSON.stringify(correctOrder)) {
+        alert('Parabéns! Você completou todos os quebra-cabeças!');
+      } else {
+        alert('Ainda não está certo! Continue tentando.');
+      }
+    };
+
+    createPuzzle();
+  </script>
+</body>
+</html>
